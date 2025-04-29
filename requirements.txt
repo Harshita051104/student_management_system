@@ -1,4 +1,0 @@
-flask
-psycopg2-binary
-flask-bcrypt
-gunicorn==23.0.0
