@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Subjects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+    
+        body, html {
+          height: 100%;
+          font-family: 'Poppins', sans-serif;
+          background: #000;
+          perspective: 2000px;
+          overflow-x: hidden;
+        }
+    
+        .container {
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+          background: linear-gradient(135deg, #6B46C1, #2D3748, #4299E1);
+          background-size: 300% 300%;
+          animation: gradientBG 15s ease infinite;
+        }
+    
+        @keyframes gradientBG {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+    
+        .card {
+          background: white;
+          padding: 35px 30px;
+          border-radius: 20px;
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+          max-width: 500px;
+          width: 100%;
+        }
+    
+        h2 {
+          text-align: center;
+          font-size: 26px;
+          color: #2D3748;
+          margin-bottom: 30px;
+          font-weight: 600;
+        }
+    
+        .subject-item {
+          background: #f9f9f9;
+          padding: 14px 18px;
+          border-radius: 12px;
+          margin-bottom: 15px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+        }
+    
+        .subject-item label {
+          font-size: 16px;
+          color: #2D3748;
+        }
+    
+        .subject-item input[type="checkbox"] {
+          transform: scale(1.2);
+          accent-color: #6B46C1;
+        }
+    
+        button {
+          margin-top: 20px;
+          width: 100%;
+          padding: 12px;
+          background-color: #6B46C1;
+          color: white;
+          border: none;
+          border-radius: 10px;
+          font-size: 16px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.3s ease;
+        }
+    
+        button:hover {
+          background-color: #553C9A;
+        }
+
+        .no-assigned_subjects {
+          text-align: center;
+          font-size: 1.2em;
+          color: #555;
+          margin-top: 20px;
+        }
+   
+        @media (max-width: 480px) {
+          .card {
+            padding: 25px 20px;
+          }
+    
+          h2 {
+            font-size: 22px;
+          }
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .link a {
+            color: #6B46C1;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        .link a:hover {
+            color: #553C9A;
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+      <form method="POST" action="{{ url_for('choose_subjects', semester=semester) }}" class="card">
+        <h2>Select Subjects to Teach for Semester {{ semester }}</h2>
+        
+        {% if subjects %}
+        <h3>Assign Subjects:</h3>
+        {% for subject in subjects %}
+        <div class="subject-item">
+          <label>{{ subject.subject_name }}</label>
+          <input type="checkbox" name="subjects" value="{{ subject.subject_id }}">
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-assigned_subjects">No unassigned subjects available.</div>
+        {% endif %}
+        
+        {% if assigned_subjects %}
+        <h3>Unassign Subjects:</h3>
+        {% for subject in assigned_subjects %}
+        <div class="subject-item">
+          <label>{{ subject.subject_name }}</label>
+          <input type="checkbox" name="unassign_subjects" value="{{ subject.subject_id }}">
+        </div>
+        {% endfor %}
+        {% endif %}
+  
+        <button type="submit">Submit</button>
+  
+        <div class="link">
+          <a href="/faculty/dashboard">← Back to Dashboard</a>
+        </div>
+      </form>
+    </div>
+</body>  
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6B46C1, #2D3748, #4299E1);
+            background-size: 300% 300%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 24px;
+            color: #6B46C1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #6B46C1;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background-color: rgba(107, 70, 193, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6B46C1, #4299E1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #2D3748;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .welcome-text {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-text {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #6B46C1, #4299E1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            color: #2D3748;
+            margin-bottom: 4px;
+        }
+
+        .stat-info p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6B46C1, #4299E1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card i {
+            font-size: 38px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #6B46C1, #4299E1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card:hover i {
+            transform: scale(1.1);
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 20px;
+            color: #2D3748;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .welcome-text {
+                font-size: 1.5rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-profile {
+                padding: 4px 8px;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </a>
+            <div class="nav-links">
+                <h1 style="text-align: center; font-size: 32px; font-weight: bold; color: #333; text-shadow: 1px 1px 2px #bbb; margin: 10px 0;">
+                    FACULTY DASHBOARD
+                </h1>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">{{ profile_avatar }}</div>
+                <div class="user-info">
+                    <span class="user-name">{{ name }}</span>
+                    <span class="user-role">Faculty</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 class="welcome-text">Welcome, {{ name }}!</h1>
+                <p class="date-text">Today is {{ today }}</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="stat-info">
+                        <label for="semesterSelect" style="font-weight: 600; color: #2D3748;">Select Semester</label>
+                        <select id="semesterSelect" onchange="updateSemester()" style="margin-top: 5px; padding: 6px; border-radius: 8px; border: 1px solid #CBD5E0;">
+                            <option value="">-- Choose --</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-container">
+                <div class="card" id="card-manage-attendance">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>Manage Attendance</h3>
+                    <p>Take and manage student attendance records</p>
+                </div>
+            
+                <div class="card" id="card-class-schedule">
+                    <i class="fas fa-clock"></i>
+                    <h3>Class Schedule</h3>
+                    <p>View and manage your teaching schedule</p>
+                </div>
+            
+                <div class="card" id="card-choose-subjects">
+                    <i class="fas fa-book-open"></i>
+                    <h3>Choose Subjects</h3>
+                    <p>Select subjects you're teaching for the selected semester</p>
+                </div>
+
+                <div class="card" id="card-feedback">
+                    <i class="fas fa-comment-dots"></i>
+                    <h3>Feedback</h3>
+                    <p>View course feedback and suggestions</p>
+                </div>
+            
+                <div class="card" id="card-announcements">
+                    <i class="fas fa-bullhorn"></i>
+                    <h3>Announcements</h3>
+                    <p>Post important notices and updates</p>
+                </div>
+            
+                <div class="card" id="card-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <h3>Logout</h3>
+                    <p>Securely sign out from your account</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    // Set today's date
+    const dateElement = document.querySelector('.date-text');
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    dateElement.textContent = `Today is ${new Date().toLocaleDateString('en-US', options)}`;
+            
+    // Update links based on selected semester
+    function updateCardLinks(semester) {
+        const links = {
+             "card-manage-attendance": semester ? `/mark-attendance/${semester}` : null,
+             "card-class-schedule": semester ? `/faculty-timetable/${semester}` : null,
+             "card-choose-subjects": semester ? `/choose_subjects/${semester}` : null,
+             "card-feedback": semester ? `/view-feedbacks/${semester}` : null,
+             "card-announcements": semester ? `/post-announcements/${semester}` : null,
+             "card-logout": "/logout"
+        };
+        
+        for (const [cardId, url] of Object.entries(links)) {
+            const card = document.getElementById(cardId);
+            if (card) {
+                if (url) {
+                    card.onclick = () => {
+                        location.href = url;
+                    };
+                } else {
+                    card.onclick = () => {
+                        alert("Please select a semester first.");
+                    };
+                }
+            }
+        }
+    }
+    
+    // Save semester when selected
+    function updateSemester() {
+        const semester = document.getElementById('semesterSelect').value;
+        localStorage.setItem('selectedSemester', semester);
+        updateCardLinks(semester);
+    }
+            
+    // When page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedSemester = localStorage.getItem('selectedSemester') || "";
+        document.getElementById('semesterSelect').value = savedSemester;
+        updateCardLinks(savedSemester);
+    });
+    </script>
+</body>
+</html>
+            
