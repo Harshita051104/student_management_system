@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Announcement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Your provided CSS */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body, html {
+          height: 100%;
+          font-family: 'Poppins', sans-serif;
+          background: #000;
+          color: #333;
+          perspective: 2000px;
+          overflow-x: hidden;
+        }
+
+        .container {
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+          background: linear-gradient(135deg, #6B46C1, #2D3748, #4299E1);
+          background-size: 300% 300%;
+          position: relative;
+          animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .card {
+          background: rgba(255, 255, 255, 0.95);
+          padding: 40px;
+          border-radius: 24px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          width: 100%;
+          max-width: 500px;
+          position: relative;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
+        }
+
+        h2 {
+          text-align: center;
+          color: #44337A;
+          margin-bottom: 30px;
+          font-size: 32px;
+          font-weight: 600;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+          margin-bottom: 25px;
+          position: relative;
+        }
+
+        input[type="text"], textarea {
+          width: 100%;
+          padding: 15px;
+          border: 2px solid #E9D8FD;
+          border-radius: 12px;
+          background-color: rgba(255, 255, 255, 0.9);
+          font-size: 15px;
+          font-family: 'Poppins', sans-serif;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+          color: #2D3748;
+          resize: none;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+          outline: none;
+          border-color: #805AD5;
+          box-shadow: 0 5px 20px rgba(128, 90, 213, 0.2);
+        }
+
+        textarea {
+          height: 200px;
+        }
+
+        .btn-submit {
+          width: 100%;
+          padding: 15px;
+          border: none;
+          background: #6B46C1;
+          color: #fff;
+          font-size: 16px;
+          font-weight: 600;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+          background: #805AD5;
+          box-shadow: 0 8px 20px rgba(128, 90, 213, 0.4);
+        }
+
+        .link {
+          text-align: center;
+          margin-top: 20px;
+          font-size: 14px;
+          color: #4A5568;
+        }
+
+        .link a {
+          color: #6B46C1;
+          text-decoration: none;
+          font-weight: 500;
+        }
+
+        .link a:hover {
+          color: #805AD5;
+          text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+          .card {
+            padding: 30px 20px;
+          }
+          
+          h2 {
+            font-size: 24px;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <form method="POST">
+            <h2>Post an Announcement</h2>
+
+            <div class="input-group">
+                <label for="title">Title:</label><br>
+                <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="input-group">
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Post Announcement</button>
+
+            <div class="link">
+                <a href="/faculty/dashboard">← Back to Dashboard</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

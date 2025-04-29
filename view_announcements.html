@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Announcements</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body, html {
+          height: 100%;
+          font-family: 'Poppins', sans-serif;
+          background: #000;
+          color: #333;
+          perspective: 2000px;
+          overflow-x: hidden;
+        }
+
+        .container {
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          padding: 20px;
+          background: linear-gradient(135deg, #6B46C1, #2D3748, #4299E1);
+          background-size: 300% 300%;
+          position: relative;
+          animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .card {
+          background: rgba(255, 255, 255, 0.95);
+          padding: 30px;
+          border-radius: 24px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          width: 100%;
+          max-width: 700px;
+          margin-bottom: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
+          overflow: hidden;
+        }
+
+        h2 {
+          text-align: center;
+          color: #44337A;
+          margin-bottom: 30px;
+          font-size: 32px;
+          font-weight: 600;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .announcement-item {
+          background: rgba(255, 255, 255, 0.85);
+          padding: 20px;
+          border-radius: 15px;
+          margin-bottom: 15px;
+          box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .announcement-title {
+          font-weight: bold;
+          font-size: 18px;
+          color: #2D3748;
+          margin-bottom: 5px;
+        }
+
+        .announcement-date {
+          font-size: 0.85em;
+          color: #666;
+          text-align: right;
+          margin-top: 10px;
+        }
+
+        .no-announcements {
+          text-align: center;
+          font-size: 1.2em;
+          color: #555;
+          margin-top: 20px;
+        }
+
+        .btn-back {
+          margin-top: 20px;
+          padding: 12px 25px;
+          background: #6B46C1;
+          color: #fff;
+          font-size: 16px;
+          font-weight: 600;
+          border: none;
+          border-radius: 12px;
+          cursor: pointer;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          display: inline-block;
+        }
+
+        .back-button-wrapper {
+          text-align: center;
+          margin-top: 20px;
+        }
+
+        .btn-back:hover {
+          background: #805AD5;
+          box-shadow: 0 8px 20px rgba(128, 90, 213, 0.4);
+        }
+
+        @media (max-width: 480px) {
+          .card {
+            padding: 25px 20px;
+          }
+          h2 {
+            font-size: 26px;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Announcements</h2>
+
+        {% if announcements %}
+            {% for announcement in announcements %}
+                <div class="announcement-item">
+                    <div class="announcement-title">{{ announcement[0] }}</div> <!-- Title -->
+                    <p>{{ announcement[1] }}</p> <!-- Message -->
+                    <div class="announcement-date">{{ announcement[2] }}</div> <!-- Date -->
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-announcements">No announcements available for your semester yet.</div>
+        {% endif %}
+
+        <div class="back-button-wrapper">
+            <a href="/student/dashboard" class="btn-back">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
