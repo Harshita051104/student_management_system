@@ -24,6 +24,38 @@ def get_db_connection():
     )
     return conn
 
+@app.route('/init-db')
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS students (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            roll_number TEXT UNIQUE NOT NULL,
+            course TEXT NOT NULL,
+            current_semester TEXT,
+            password TEXT NOT NULL
+        );
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS faculty (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            faculty_code TEXT UNIQUE NOT NULL,
+            course TEXT NOT NULL,
+            password TEXT NOT NULL
+        );
+    ''')
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return "✅ Tables created successfully!"
+
 
 @app.after_request
 def add_header(response):
