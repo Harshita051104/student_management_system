@@ -57,12 +57,12 @@ def register():
         try:
             if role == 'student':
                 cursor.execute(
-                    'INSERT INTO Students (name, roll_number, course, current_semester, password) VALUES (%s, %s, %s, %s, %s)',
+                    'INSERT INTO students (name, roll_number, course, current_semester, password) VALUES (%s, %s, %s, %s, %s)',
                     (name, identifier, course, current_semester, hashed_password)
                 )
             elif role == 'faculty':
                 cursor.execute(
-                    'INSERT INTO Faculty (name, faculty_code, course, password) VALUES (%s, %s, %s, %s)',
+                    'INSERT INTO faculty (name, faculty_code, course, password) VALUES (%s, %s, %s, %s)',
                     (name, identifier, course, hashed_password)
                 )
             conn.commit()
@@ -90,10 +90,10 @@ def login():
         cursor = conn.cursor()
         
         if role == 'student':
-            cursor.execute('SELECT * FROM Students WHERE roll_number = %s', (identifier,))
+            cursor.execute('SELECT * FROM students WHERE roll_number = %s', (identifier,))
             user = cursor.fetchone()
         elif role == 'faculty':
-            cursor.execute('SELECT * FROM Faculty WHERE faculty_code = %s', (identifier,))
+            cursor.execute('SELECT * FROM faculty WHERE faculty_code = %s', (identifier,))
             user = cursor.fetchone()
             
         cursor.close()
