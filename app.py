@@ -2,11 +2,11 @@
 # pyright: reportMissingImports=false
 # set up database connection
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-import os
 import psycopg2
 from collections import defaultdict
 from flask_bcrypt import Bcrypt
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.secret_key = 'mydevelopmentsecret123'  # Required for flashing messages and session
@@ -15,47 +15,16 @@ bcrypt = Bcrypt(app)
 
 # Database connection function
 def get_db_connection():
-    conn = psycopg2.connect(
-        host=os.getenv("DB_HOST"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        port=os.getenv("DB_PORT", 5432)
-    )
-    return conn
-
-@app.route('/init-db')
-def init_db():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS students (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            roll_number TEXT UNIQUE NOT NULL,
-            course TEXT NOT NULL,
-            current_semester TEXT,
-            password TEXT NOT NULL
-        );
-    ''')
-
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS faculty (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            faculty_code TEXT UNIQUE NOT NULL,
-            course TEXT NOT NULL,
-            password TEXT NOT NULL
-        );
-    ''')
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return "✅ Tables created successfully!"
-
+    DATABASE_URL = os.environ.get("DATABASE_URL")
+    if DATABASE_URL:
+        return psycopg2.connect(DATABASE_URL)
+    else:
+        return psycopg2.connect(
+            host="localhost",
+            database="student_management",
+            user="postgres",
+            password="harshita@05"
+        )
 
 @app.after_request
 def add_header(response):
@@ -89,12 +58,12 @@ def register():
         try:
             if role == 'student':
                 cursor.execute(
-                    'INSERT INTO students (name, roll_number, course, current_semester, password) VALUES (%s, %s, %s, %s, %s)',
+                    'INSERT INTO Students (name, roll_number, course, current_semester, password) VALUES (%s, %s, %s, %s, %s)',
                     (name, identifier, course, current_semester, hashed_password)
                 )
             elif role == 'faculty':
                 cursor.execute(
-                    'INSERT INTO faculty (name, faculty_code, course, password) VALUES (%s, %s, %s, %s)',
+                    'INSERT INTO Faculty (name, faculty_code, course, password) VALUES (%s, %s, %s, %s)',
                     (name, identifier, course, hashed_password)
                 )
             conn.commit()
@@ -122,10 +91,10 @@ def login():
         cursor = conn.cursor()
         
         if role == 'student':
-            cursor.execute('SELECT * FROM students WHERE roll_number = %s', (identifier,))
+            cursor.execute('SELECT * FROM Students WHERE roll_number = %s', (identifier,))
             user = cursor.fetchone()
         elif role == 'faculty':
-            cursor.execute('SELECT * FROM faculty WHERE faculty_code = %s', (identifier,))
+            cursor.execute('SELECT * FROM Faculty WHERE faculty_code = %s', (identifier,))
             user = cursor.fetchone()
             
         cursor.close()
@@ -189,7 +158,7 @@ def forgot_password():
         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
 
         # Database connection inside the route
-        conn = psycopg2.connect(dbname="student_management", user="postgres", password="harshita@05", host="localhost")
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         # Check for student
@@ -404,7 +373,7 @@ def student_subjects(semester):
         return "Error: Course not found for the logged-in student."
 
     # Database connection
-    conn = psycopg2.connect(dbname="student_management", user="postgres", password="harshita@05", host="localhost")
+    conn = get_db_connection()
     cursor = conn.cursor()
 
     # Always fetch the latest current_semester for student
@@ -445,7 +414,7 @@ def feedback_form(semester):
     student_id = session['student_id']
 
     # Fetch the logged-in student's course from the database
-    conn = psycopg2.connect(dbname="student_management", user="postgres", password="harshita@05", host="localhost")
+    conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute("SELECT course, current_semester FROM Students WHERE student_id = %s", (student_id,))
@@ -489,7 +458,7 @@ def view_feedbacks(semester):
     # Database connection
     try:
         # Establish connection
-        conn = psycopg2.connect(dbname="student_management", user="postgres", password="harshita@05", host="localhost")
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         # Fetch the logged-in faculty's course
@@ -533,7 +502,7 @@ def post_announcements(semester):
 
     try:
         # Connect to the database and fetch the faculty's course
-        conn = psycopg2.connect(dbname="student_management", user="postgres", password="harshita@05", host="localhost")
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT course FROM faculty WHERE faculty_id = %s", (faculty_id,))
         faculty_course = cursor.fetchone()
@@ -559,7 +528,7 @@ def post_announcements(semester):
         if title and message:
             try:
                 # Insert announcement into the database
-                conn = psycopg2.connect(dbname="student_management", user="postgres", password="harshita@05", host="localhost")
+                conn = get_db_connection()
                 cursor = conn.cursor()
 
                 cursor.execute("""
@@ -595,7 +564,7 @@ def view_announcements(semester):
     
     try:
         # Fetch student course
-        conn = psycopg2.connect(dbname="student_management", user="postgres", password="harshita@05", host="localhost")
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT course FROM students WHERE student_id = %s", (student_id,))
         student_course = cursor.fetchone()
@@ -637,7 +606,7 @@ def view_announcements(semester):
 def mark_attendance(semester):
 
     # Create connection inside the route
-    conn = psycopg2.connect(host="localhost", database="student_management", user="postgres", password="harshita@05")
+    conn = get_db_connection()
     cur = conn.cursor()
 
     faculty_id = session['faculty_id']
@@ -711,7 +680,7 @@ def view_attendance(semester):
     course = session.get('course')
 
     # Create connection
-    conn = psycopg2.connect(host="localhost", database="student_management", user="postgres", password="harshita@05")
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # Fetch subjects for the student's course and semester
@@ -780,7 +749,7 @@ def view_timetable(semester):
     app.jinja_env.filters['format_subject'] = format_subject_name
 
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(host="localhost", database="student_management", user="postgres", password="harshita@05")
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # Fetch timetable data with subject and faculty info
@@ -831,12 +800,7 @@ def faculty_timetable(semester):
     course = session['course']
 
     # Connect to PostgreSQL
-    conn = psycopg2.connect(
-        host="localhost",
-        database="student_management",
-        user="postgres",
-        password="harshita@05"
-    )
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # Step 1: Get subject_ids assigned to this faculty for selected semester & course
@@ -879,4 +843,5 @@ def logout():
 
 if __name__ == '__main__':
  app.run(debug=True)
+
 
