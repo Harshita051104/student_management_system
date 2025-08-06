@@ -58,8 +58,8 @@ def register():
         try:
             if role == 'student':
                 cursor.execute(
-                    'INSERT INTO Students (name, roll_number, course, current_semester, password) VALUES (%s, %s, %s, %s, %s)',
-                    (name, identifier, course, current_semester, hashed_password)
+                    'INSERT INTO Students (name, roll_number, course, password, current_semester) VALUES (%s, %s, %s, %s, %s)',
+                    (name, identifier, course, hashed_password, current_semester)
                 )
             elif role == 'faculty':
                 cursor.execute(
@@ -843,5 +843,6 @@ def logout():
 
 if __name__ == '__main__':
  app.run(debug=True)
+
 
 
