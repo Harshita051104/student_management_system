@@ -14,18 +14,17 @@ app.secret_key = 'mydevelopmentsecret123'  # Required for flashing messages and 
 bcrypt = Bcrypt(app)
 
 # Database connection function
+def get_db_connection():
     DATABASE_URL = os.environ.get("DATABASE_URL")
-
-    if DATABASE_URL:  # Deployment (Render)
-        return psycopg2.connect(DATABASE_URL, sslmode='require')
-    else:  # Local run on laptop
+    if DATABASE_URL:
+        return psycopg2.connect(DATABASE_URL + "?sslmode=require")
+    else:
         return psycopg2.connect(
             host="localhost",
             database="student_management",
             user="postgres",
             password="harshita@05"
         )
-
 @app.after_request
 def add_header(response):
     response.cache_control.no_cache = True
@@ -843,6 +842,7 @@ def logout():
 
 if __name__ == '__main__':
  app.run(debug=True)
+
 
 
 
