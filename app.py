@@ -7,6 +7,9 @@ from collections import defaultdict
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'mydevelopmentsecret123'  # Required for flashing messages and session
@@ -842,6 +845,7 @@ def logout():
 
 if __name__ == '__main__':
  app.run(debug=True)
+
 
 
 
