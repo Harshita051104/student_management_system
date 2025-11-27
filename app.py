@@ -203,7 +203,7 @@ def forgot_password():
 
 
 # Student dashboard
-@app.route('/student_dashboard')
+@app.route('/student/dashboard')
 def student_dashboard():
     if 'user_id' not in session or session.get('role') != 'student':
         flash('Unauthorized access.', 'danger')
@@ -255,7 +255,7 @@ def student_dashboard():
     )
 
 # Faculty dashboard
-@app.route('/faculty_dashboard')
+@app.route('/faculty/dashboard')
 def faculty_dashboard():
     if 'user_id' not in session or session.get('role') != 'faculty':
         flash('Unauthorized access.', 'danger')
@@ -845,6 +845,7 @@ def logout():
 
 if __name__ == '__main__':
  app.run(debug=True)
+
 
 
 
